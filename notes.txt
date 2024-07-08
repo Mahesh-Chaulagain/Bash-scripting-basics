@@ -1,0 +1,284 @@
+# Bash Scripting
+-> a powerful and versatile tool for automating system administrative tasks, managing system resources and performing other routine
+    tasks in Unix/Linux systems
+-> bash script is a file containing a sequence of commands that are executed by the bash program line by line
+-> 'shells' refers to the program that provides a command-line interface for interacting with an operating system.
+-> Bash(Bourme_Again SHell) is one of the most commonly used Unix/Linux shells
+-> can determin your shell type by using 'ps' command
+
+# Get started with Bash Scripting
+-> generally commands follows this syntax:
+    command [OPTIONS] arguments
+
+-> Some commands are:
+    date: displays the current date
+    pwd: displays the present working directory
+    ls: list the contents of the current directory
+    echo: prints a string of text, or value of a variable to the terminal
+    cd: change directory
+    mkdir: create new directory
+    touch: create new file
+    rm: remove a file or directory
+    cp: copy a file or directory
+    mv: move or rename a file or directory
+    cat: concatenate and print contents of a file
+    grep: search for pattern in a file
+    chmod: change the permissions of a file or directory
+    sudo: run a command with administrative privileges
+    df: display the amount of disk space available
+    history: show a list of previously executed commands
+    ps: display information about the running processes
+
+# Script naming conventions
+-> by naming convention, bash scripts end with '.sh' however bash script can run perfectly fine without the 'sh' extension
+
+# Creating our first bash script
+-> this script prompts the user to enter a path and in return its contents will be listed
+-> create a file named 'run_all.sh' using the 'vi' command(can use any editor of your choice):
+    vi run_all.sh
+-> add commands to the file and save it as:
+    #!/bin/sh
+
+    # display the current date and time in the terminal . note that the 'date' is in backticks
+    echo "Today is " `date`
+
+    echo -e  "\nenter the path to directory"
+    # the read command reads the input and stores it in variable 'the_path'
+    read the_path
+
+    echo -e "\nyour path has the following files and folders:"
+    ls $the_path 
+
+# Executing the bash script
+-> to make the script executable, assign execution rights to your user using this command:
+    chmod u+x run_all.sh
+where,
+    chmod modifies the ownership of a file for the current user
+    +x adds the execution rights to current user
+
+-> run the script using any of the following methods:
+    - sh run_all.sh
+    - bash run_all.sh
+    - ./run_all.sh
+
+# Bash scripts basics
+
+##. Comments in bash Scripting
+-> comment starts with '#' so nay line that begin with # is a comment
+
+##. Variables and datatypes in bash
+-> variables let you store data. you can use variable to read, access, and manipulate data throughout your script
+-> there are no datatypes in bash, a variable is capable of storing numeric character, individual character or strings of characters
+-> can use and set the variable values in the following ways:
+    1. assign value directly:
+        country=Nepal
+    2. assign value based on the output obtained from a program or command, using command substitution. '$' is required to access an
+        existing variable's value
+        same_country=$country
+-> eg:  
+    country=Nepal
+    echo $country
+    new_country=$country
+    echo $new_country
+
+## Gathering input
+-> some methods to provide input to our scripts are:
+    1. reading the user input and storing it in a variable using the 'read' command
+        echo -e "\nenter your name"
+        read name
+    
+    2. reading from file
+    -> to read each line from a file(e.g input.txt) and print it in ther terminal
+        while read line
+        do 
+            echo $line
+        done < notes.txt
+
+    3. command line arguments
+    -> in bash script or function, '$1' denotes the initial argument passed, '$2' denotes the second argument passed and so forth
+    -> Use double quotes (") when you want to include variables or perform variable expansion
+    -> e.g  this script takes the name as a command line argument and prints a personalized greeting
+        echo "Hello, $1!"   # must use double quote
+
+## Displaying output
+-> some methods to display output are:
+    1. printing to the terminal 
+        echo "hello, world!"
+    
+    2. writing to file:
+    -> to write text to a file named 'output.txt' use:
+        echo "this is some text." > output.txt
+    *Note that the '>' operator overwrites a file if it already has some contents
+
+    3. appending to a file
+    -> append a text to the end of the 'output.txt' as:
+        echo "more text." >> output.txt
+
+    4. redirecting output
+    -> to redirect output of any command to a file use:
+        ls > files.txt
+
+## Conditional statements(if/else)
+-> expressions that produce a boolean result, either true or false are called conditions
+-> several ways to evaluate conditons: if, if-else, if-elif-else and nested conditions
+-> Syntax:
+    if [[ condition ]];
+    then 
+        statement
+    elif [[ condition ]];
+    then 
+        statement
+    else
+        do this by default
+    fi
+    
+-> can use logical operators such as AND '-a' and OR '-o' to make comparisions that have more significance like
+    if [ $a -gt 60 -a $b -lt 100 ]    # read as if 'a' is greater than 60 and 'b' is less than 100
+-> must add spaces around square brackets
+-> example:
+    echo "enter a number"
+    read number
+
+    if [ $number -gt 0 ];
+    then 
+        echo "$number is positive"
+    elif [ $number -lt 0 ];
+    then 
+        echo "$number is negative"
+    else
+        echo "$number is zero"
+
+    fi
+
+## looping and branching in bash
+1. while looping
+-> checks for a condition and loop until the condition remains true
+-> need to provide a counter statement that increments the counter to control loop execution as:
+    (( i += 1))
+-> example
+    i = 1 
+    while [[ $i -le 10 ]];do
+        echo "$i"
+        (( i +=1 ))
+    done
+
+2. for loop
+-> allows to execute statement a specific number of times
+-> example
+    for i in {1..5}
+    do  
+        echo $i
+    done
+
+3. case statements
+-> used to compare a given value against a list of patterns and execute a block of code on the first pattern that matches
+-> syntax:
+    case expression in 
+        pattern1)
+            # code to execute if expression matches pattern1
+            ;;
+        pattern2)
+            # code to execute if expression matches pattern2
+            ;;
+        pattern3)
+            # code to execute if expression matches pattern3
+            ;;
+        *)
+            # code to execute if none of the above patterns match expression
+            ;;
+        
+    esac
+
+## Schedule scripts using cron
+-> cron: a powerful utility for job scheduling that is available in Unix-like operating system
+-> by configuring cron, you can set up automated jobs to run on a daily, weekly or specific time basis
+-> the automation capabilities provided by cron play a crucial role in linux system administration
+-> to use cron jobs, you will need to check the status of the cron service using:
+    sudo systemctl status cron.service
+-> syntax to schedule crons:
+    # cron job example
+    * * * * * sh/path/to/script.sh
+here '*' represents minute(s)hour(s)day(s)month(s)weekday(s) respectively
+-> example of scheduling cron
+    0 0 * * *: run a script at midnight everyday -> eg:0 0 * * * /path/to/script.sh
+    */5 * * * *: run a script every 5 minutes -> eg:* /5 * * * * /path/to/script.sh
+    0 6 * * 1-5: run a script at 6 am Monday to Friday -> eg: 0 6 * * 1-5 /path/to/script.sh
+    0 0 1-7 * *: run a script on the first 7 day of every month -> eg:0 0 1-7 * * /path/to/script.sh
+    0 12 1 * * : run a script on the first day of every month at noon -> eg:0 12 1 * * /path/to/script.sh
+
+# Using crontab
+-> crontab utility is used to add and edit the cron jobs
+-> crontab -l : lists the already scheduled scripts for a particular user
+-> crontab -e : add and edit the cron
+-> crontab -u username -l: list another user's crons
+-> crontab -u username -e: edit another user's crons 
+
+
+# how to set up cron job
+-> steps are:
+    1. create a script called 'date-script.sh' which prints system date and time and appends it to the file.
+    -commands
+        touch date-script.sh
+        vim date-script.sh
+            press 'i' to insert text
+                #!/bin/sh
+                echo `date` >> date-out.txt
+            press 'esc' to ecape to normal mode 
+            ':wq' to write and quit vim editor
+    2. make the script executable by giving it executable rights
+        chmod 775 date-script.sh
+    3. add the script in crontab using 'crontab-e'
+    -to schedule it to run per minute   
+        */1 * * * * /bin/sh /home/kali/date-script.sh
+    4. check the output of the file 'date-out.txt'.according to the script the system date should be printed to this file every minute    
+    
+## How to Debug and troubleshoot bash scripts
+
+1. Set the 'set-x' option
+-> set the 'set-x' option at the beginning of the script which enables debugging mode that causes bash to print each command that it 
+    executes to the terminal preceded by the '+' sign
+-> syntax:
+    #!/bin/bash
+    set -x
+    # your script goes here
+
+2. Check the exit code 
+-> when bash encounters a error, it sets an exit code that indicates the nature of the error
+-> check the exit code of the most recent command using the '$?' variable
+-> a value of '0' indicates success, while any other value indicates an error
+-> i.e
+    #!/bin/bash
+    # your script goes here
+
+    if[ $? -ne 0 ];then
+        echo "error occured'
+
+    fi
+
+3. Use 'echo' statement
+-> help identify where errors are occuring and what values are being passed to variables
+-> i.e 
+    #!/bin/bash
+    # your script goes here
+    echo "Value of variable x is: $x"
+    # more code here
+
+4. Use the set -e option
+-> use the 'set-e' option if you want your script to exit immediately when any command in the script fails 
+-> i.e
+    #!/bin/bash
+    set -e 
+    # your script goes here
+
+# Troubleshooting crons by verifying logs
+-> logs are maintained for all the scheduled jobs and we can check and varify in logs if a specific log ran as intended or not
+-> find cron logs at:
+    /var/log/syslog
+    or
+    /var/log/cron
+-> If there is an entry in these logs at the correct time, it means the cron has run according to the schedule you set
+
+-> redirect cron output to a file to check the file for any possible errors
+    # Redirect cron output to a file
+    * * * * * sh /path/to/script.sh &> log_file.log
+    

@@ -1,0 +1,6 @@
+files.txt
+greetings.sh
+notes.txt
+output.txt
+read_file.sh
+run_all.sh
